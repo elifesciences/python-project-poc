@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+#  db:
+#    image: postgres:9.4
+#    volumes:
+#      - ./config/application_user.sql:/docker-entrypoint-initdb.d/application_user.sql
+#    env_file:
+#      - dev.env
+
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    working_dir: /srv/test-proj
+    volumes:
+      - .:/srv/test-proj
+    command: "python run.py"
+    ports:
+      - "5000:5000"
+#    depends_on:
+#      - db
+    env_file:
+      - dev.env
