@@ -94,7 +94,8 @@ python-versions = "*"
 version = "0.14.1"
 
 [metadata]
-content-hash = "f497e3c446afde65f04bc4b58b80e17c6fd0f8bfab2687e5050c7d3cbc1887e9"
+content-hash = "8c0b9fe806b56c28a3192c956903b9cbf39535af107dd656dbeafba2f843eefe"
+python-versions = "~3.6"
 
 [metadata.hashes]
 click = ["2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13", "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"]
