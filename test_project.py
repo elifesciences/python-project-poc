@@ -1,11 +1,11 @@
 import logging
 
-from run import app
+from run import APP
 
 
 def test_logging():
     print('print before logging')
-    print(app.config.__dict__)
+    print(APP.config.__dict__)
     logger = logging.getLogger()
     logger.info('test info')
     logger.debug('test debug')

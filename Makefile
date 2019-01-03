@@ -12,7 +12,13 @@ stop:
 	docker-compose -f docker-compose.dev.yml down -v
 
 tests:
-	docker-compose -f docker-compose.dev.yml run --rm --service-ports web pytest -s --pdbcls=IPython.terminal.debugger:Pdb --log-cli-level DEBUG
+	docker-compose -f docker-compose.dev.yml run --rm --service-ports web \
+	pytest -s --pdbcls=IPython.terminal.debugger:Pdb --log-cli-level DEBUG && \
+	pylint run.py test_project.py --rcfile=.pylintrc && \
+	echo \"Starting flake8 checks\" && \
+	flake8 --config=.flake8 && \
+	echo \"All checks completed\"
+
 
 debug:
 	docker-compose -f docker-compose.dev.yml run --rm --service-ports web
