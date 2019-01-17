@@ -1,4 +1,4 @@
-elife Python project template
+eLife python project POC
 =============================
 The purpose of this project is to create a template for other python projects.
 
