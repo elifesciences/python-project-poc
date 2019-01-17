@@ -37,6 +37,8 @@ stop:
 checks:
 	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "\
 	echo \"Running checks...\" && \
+	echo \"- check for breakpoints\" && \
+	source scripts/find-breakpoints.sh && \
 	echo \"- mypy\" && \
 	mypy $(FILES_TO_CHECK) && \
 	echo \"- flake8\" && \
@@ -49,7 +51,7 @@ checks:
 .PHONY: tests
 tests:
 	$(DOCKER_COMPOSE) run --rm --service-ports web /bin/bash -c \
-	"pytest -s --pdbcls=IPython.terminal.debugger:Pdb --log-cli-level DEBUG -vv"
+	"pytest -s --pdbcls=IPython.terminal.debugger:Pdb -vv"
 
 all-tests: checks tests
 
