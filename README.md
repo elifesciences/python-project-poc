@@ -10,6 +10,8 @@ Ideally repositories should:
  - be easy to run
  - be easy to test
  - be easy to debug
+ - be containerised
+ - be tidy (minimal amount of files in project root)
 
 
 Dependencies
