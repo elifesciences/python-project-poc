@@ -1,28 +1,85 @@
+PROJECT_CODEBASE_DIR = "test_proj/"
+TESTS_DIR = "tests/"
+FILES_TO_CHECK = $(PROJECT_CODEBASE_DIR) $(TESTS_DIR)
+DOCKER_COMPOSE = docker-compose -f docker/docker-compose.dev.yml
+
 help:
-	@echo "start  - builds and starts services in dev mode"
-	@echo "stop   - stop all running containers belonging to the project"
-	@echo "test   - runs tests in debug mode (able to use pdb breakpoints)"
-	@echo "debug  - runs the application in debug mode (able to use pdb breakpoints)"
-	@echo "clean  - delete project containers, images and volumes"
+	@echo "start                 - builds and/or starts all services"
+	@echo "stop                  - stops all running containers belonging to the project"
+	@echo "checks                - runs static checks such as linting without running unit tests"
+	@echo "tests                 - runs unit tests in debug mode (able to use pdb breakpoints)"
+	@echo "all-tests             - runs static checks and unit tests"
+	@echo "fix-imports           - silently modifies imports on all project files that do not"
+	@echo "                        adhere to project coding standards regarding imports"
+	@echo "run                   - only runs the application service (able to use pdb breakpoints)"
+	@echo "shell                 - enter the shell of the application service"
+	@echo "build                 - builds the application service"
+	@echo "---------------------------------------------------------------"
+	@echo "make build should be run after adding and removing dependencies"
+	@echo "---------------------------------------------------------------"
+	@echo "dependency-tree       - show dependency tree"
+	@echo "d-tree                - alias for \"dependency-tree\""
+	@echo "dependency            - add or update a python dependency by specifying a package"
+	@echo "                        e.g. make dependency package=flask"
+	@echo "                        e.g. make dependency package=flask==1.0.2"
+	@echo "dev-dependency        - same as \"dependency\" except the package will be installed"
+	@echo "                        during development only"
+	@echo "remove-dependency     - remove a python dependency by specifying a package"
+	@echo "                        e.g. make remove-dependency package=flask"
+	@echo "remove-dev-dependency - same as \"remove-dependency\" regarding development dependencies"
 
 start:
-	docker-compose -f docker-compose.dev.yml up
+	 $(DOCKER_COMPOSE) up
 
 stop:
-	docker-compose -f docker-compose.dev.yml down -v
+	$(DOCKER_COMPOSE) down -v
 
+checks:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "\
+	echo \"Running checks...\" && \
+	echo \"- mypy\" && \
+	mypy $(FILES_TO_CHECK) && \
+	echo \"- flake8\" && \
+	flake8 $(FILES_TO_CHECK) && \
+	echo \"- pylint\" && \
+	pylint --rcfile=setup.cfg $(FILES_TO_CHECK) && \
+	echo \"All checks completed\" \
+	"
+
+.PHONY: tests
 tests:
-	docker-compose -f docker-compose.dev.yml run --rm --service-ports web \
-	pytest -s --pdbcls=IPython.terminal.debugger:Pdb --log-cli-level DEBUG && \
-	pylint run.py test_project.py --rcfile=.pylintrc && \
-	echo \"Starting flake8 checks\" && \
-	flake8 --config=.flake8 && \
-	echo \"All checks completed\"
+	$(DOCKER_COMPOSE) run --rm --service-ports web /bin/bash -c \
+	"pytest -s --pdbcls=IPython.terminal.debugger:Pdb --log-cli-level DEBUG -vv"
 
+all-tests: checks tests
 
-debug:
-	docker-compose -f docker-compose.dev.yml run --rm --service-ports web
+fix-imports:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "isort -y"
 
-clean: stop
-	-docker rm `docker-compose -f docker-compose.dev.yml ps -q`
-	-docker rmi `docker-compose -f docker-compose.dev.yml images -q`
+.PHONY: run
+run:
+	$(DOCKER_COMPOSE) run --rm --service-ports web
+
+shell:
+	$(DOCKER_COMPOSE) run --rm --service-ports web /bin/bash
+
+build:
+	$(DOCKER_COMPOSE) build web
+
+dependency-tree:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "poetry show --tree"
+
+d-tree: dependency-tree  # alias for dependency-tree
+
+dependency:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "poetry add $(package)"
+
+dev-dependency:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "poetry add $(package) --dev"
+
+remove-dependency:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "poetry remove $(package)"
+
+remove-dev-dependency:
+	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "poetry remove $(package) --dev"
+

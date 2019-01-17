@@ -1,5 +1,0 @@
-client-name:
-  client_id: client_id
-  client_secret: client_secret
-  redirect_uris:
-    - http://www.example.com/check

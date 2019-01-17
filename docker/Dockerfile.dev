@@ -1,14 +1,13 @@
 FROM python:3.6
 
+ENV PYTHONUNBUFFERED=1
 ENV PATH "/root/.poetry/bin:$PATH"
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 
 WORKDIR /srv/test-proj
 
-COPY pyproject.toml ./
-COPY poetry.lock ./
+COPY ./pyproject.toml ./
+COPY ./poetry.lock ./
 
 RUN poetry config settings.virtualenvs.create false
 RUN poetry install
-
-COPY . /srv/test-proj
