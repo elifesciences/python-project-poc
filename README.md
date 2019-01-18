@@ -93,7 +93,8 @@ It is possible to use pdb breakpoints with this configuration.
 ```
 make shell
 ```
-Use this to run the python service and enter a bash prompt.
+Use this to run the python container that would run the application and enter a
+bash prompt.
 
 ```
 make dependency-tree
