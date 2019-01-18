@@ -1,6 +1,7 @@
 FROM python:3.6
 
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV PATH "/root/.poetry/bin:$PATH"
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 
