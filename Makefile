@@ -58,7 +58,7 @@ all-tests: checks tests
 
 watch:
 	$(DOCKER_COMPOSE) run --rm --service-ports web /bin/bash -c \
-	"pytest-watch -- -s -p no:cacheprovider --pdbcls=IPython.terminal.debugger:Pdb -vv"
+	"pytest-watch -- -s -p no:cacheprovider --pdbcls=IPython.terminal.debugger:Pdb -vv ${PYTEST_ARGS}"
 
 fix-imports:
 	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "isort -y"
