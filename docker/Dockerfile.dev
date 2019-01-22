@@ -12,3 +12,5 @@ COPY ./pyproject.toml ./
 COPY ./poetry.lock ./
 
 RUN poetry config settings.virtualenvs.in-project true
+
+ENV PATH=${PROJECT_DIR}/.venv/bin:$PATH
