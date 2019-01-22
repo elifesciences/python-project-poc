@@ -5,9 +5,10 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.dev
-    working_dir: /srv/test-proj
+      args:
+        - PROJECT_DIR=${PROJECT_DIR}
     volumes:
-      - ..:/srv/test-proj
+      - ..:${PROJECT_DIR}
     command: "flask run --host=0.0.0.0"
     ports:
       - "5000:5000"
