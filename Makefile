@@ -67,6 +67,7 @@ shell:
 
 build:
 	$(DOCKER_COMPOSE) build web
+	$(DOCKER_COMPOSE) run --rm web poetry install
 
 dependency-tree:
 	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "poetry show --tree"
