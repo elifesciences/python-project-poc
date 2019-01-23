@@ -9,6 +9,7 @@ help:
 	@echo "checks                - runs static checks such as linting without running unit tests"
 	@echo "tests                 - runs unit tests in debug mode (able to use pdb breakpoints)"
 	@echo "all-tests             - runs static checks and unit tests"
+	@echo "watch                 - runs and watches unit tests in debug mode (able to use pdb breakpoints)"
 	@echo "fix-imports           - silently modifies imports on all project files that do not"
 	@echo "                        adhere to project coding standards regarding imports"
 	@echo "run                   - only runs the application service (able to use pdb breakpoints)"
@@ -54,6 +55,10 @@ tests:
 	"pytest -s --pdbcls=IPython.terminal.debugger:Pdb -vv"
 
 all-tests: checks tests
+
+watch:
+	$(DOCKER_COMPOSE) run --rm --service-ports web /bin/bash -c \
+	"pytest-watch -- -p no:cacheprovider --pdbcls=IPython.terminal.debugger:Pdb -vv ${PYTEST_ARGS}"
 
 fix-imports:
 	$(DOCKER_COMPOSE) run --rm web /bin/bash -c "isort -y"
