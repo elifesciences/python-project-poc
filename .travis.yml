@@ -1,0 +1,14 @@
+sudo: required
+
+language: minimal
+
+services: docker
+
+script:
+    - make all-tests
+
+if: |
+    branch = master OR \
+    branch =~ /^[0-9\.]+$/ OR \
+    tag IS present OR \
+    type = pull_request
