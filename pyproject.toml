@@ -15,7 +15,7 @@ pytest = "=4.1.1"
 ipdb = "^0.11.0"
 flake8 = "^3.6"
 flake8-isort = "^2.6"
-pylint = "^2.2"
+pylint = "^2.3"
 mypy = "^0.660"
 
 [build-system]
